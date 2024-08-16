@@ -1,22 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity;
+﻿using crawData;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Pomelo.EntityFrameworkCore.MySql.Storage;
+using System.Configuration;
 
-namespace crawData
+namespace CrawData
 {
-    public class  ProductContext : DbContext
+    public class ProductContext : DbContext
     {
-        private static readonly string connectionString = "Server=localhost;User ID=root;Password=;Database=laravel";
+        public ProductContext() : base(GetDbContextOptions())
+        {
+        }
 
         public DbSet<Product> Products { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        private static DbContextOptions<ProductContext> GetDbContextOptions()
         {
+            var connectionString = ConfigurationManager.ConnectionStrings["ProductDatabase"].ConnectionString;
+            var optionsBuilder = new DbContextOptionsBuilder<ProductContext>();
             optionsBuilder.UseMySql(connectionString);
+            return optionsBuilder.Options;
         }
     }
 }

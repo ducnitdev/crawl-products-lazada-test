@@ -29,6 +29,22 @@ namespace crawData
                 {
                     string url = GenerateUrl(i);
                     NavigateToUrl(driver, url);
+                    try
+                    {
+                        IWebElement webElementPage = driver.FindElement(By.CssSelector("ul.ant-pagination")).
+                            FindElement(By.CssSelector("li.ant-pagination-item-active"));
+                        int currentPage = int.Parse(webElementPage.Text);
+
+                        if (currentPage > totalPages)
+                        {
+                            break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        break;
+                    }
+
 
                     IList<IWebElement> productItems = GetProductItems(driver);
 

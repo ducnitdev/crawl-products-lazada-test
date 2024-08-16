@@ -9,7 +9,7 @@ namespace CrawData
         static void Main(string[] args)
         {
             var productCrawler = new ProductCrawler(new WebDriverFactory());
-            List<Product> products = productCrawler.CrawlProducts(22);
+            List<Product> products = productCrawler.CrawlProducts(9999);
 
             var productRepository = new ProductRepository(new ProductContext());
             productRepository.SaveProducts(products);
