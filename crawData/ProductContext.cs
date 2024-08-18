@@ -1,7 +1,5 @@
 ﻿using crawData;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Pomelo.EntityFrameworkCore.MySql.Storage;
 using System.Configuration;
 
 namespace CrawData

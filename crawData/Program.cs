@@ -1,5 +1,4 @@
 ﻿using crawData;
-using System;
 using System.Collections.Generic;
 
 namespace CrawData
@@ -9,7 +8,7 @@ namespace CrawData
         static void Main(string[] args)
         {
             var productCrawler = new ProductCrawler(new WebDriverFactory());
-            List<Product> products = productCrawler.CrawlProducts(9999);
+            List<Product> products = productCrawler.CrawlProducts(999);
 
             var productRepository = new ProductRepository(new ProductContext());
             productRepository.SaveProducts(products);

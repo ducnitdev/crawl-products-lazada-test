@@ -1,5 +1,6 @@
 ﻿using CrawData;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,7 +69,39 @@ namespace crawData
         private static void NavigateToUrl(IWebDriver driver, string url)
         {
             driver.Navigate().GoToUrl(url);
-            Thread.Sleep(5000); // Consider using WebDriverWait instead of Thread.Sleep
+            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+            // Create a JavaScript executor
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+
+            // Smooth scroll from top to bottom
+            js.ExecuteScript(@"
+            function smoothScrollToBottom(duration) {
+                var start = window.scrollY;
+                var end = document.body.scrollHeight;
+                var startTime = null;
+
+                function animateScroll(timestamp) {
+                    if (startTime === null) startTime = timestamp;
+                    var progress = Math.min((timestamp - startTime) / duration, 1); // Duration in milliseconds
+                    window.scrollTo(0, start + (end - start) * easeInOutQuad(progress));
+                    if (progress < 1) {
+                        requestAnimationFrame(animateScroll);
+                    }
+                }
+
+                function easeInOutQuad(t) {
+                    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+                }
+
+                requestAnimationFrame(animateScroll);
+            }
+
+            smoothScrollToBottom(11000); // Adjust the duration as needed (10000 ms = 10 seconds)
+        ");
+
+            // Optionally, wait for a while to ensure the scrolling action is completed
+            System.Threading.Thread.Sleep(13000);
+
         }
 
         private static IList<IWebElement> GetProductItems(IWebDriver driver)
@@ -81,12 +114,15 @@ namespace crawData
             IWebElement fileNameElement = item.FindElement(By.CssSelector("div.RfADt a"));
             IWebElement priceElement = item.FindElement(By.CssSelector("span.ooOxS"));
 
+            IWebElement imageElement = item.FindElement(By.CssSelector("img[type='product']"));
+
             return new Product
             {
                 Id = productId,
                 Name = fileNameElement.Text,
                 Url = fileNameElement.GetAttribute("href"),
-                Price = priceElement.Text
+                Price = priceElement.Text,
+                Image = imageElement.GetAttribute("src")
             };
         }
     }
